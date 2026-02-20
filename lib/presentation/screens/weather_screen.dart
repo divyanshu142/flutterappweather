@@ -17,7 +17,8 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final state = ref.watch(weatherViewModelProvider);
+    // ✅ Change: AsyncValue watch kar rahe
+    final weatherState = ref.watch(weatherViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +30,6 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
         child: Column(
           children: [
 
-            // 🔹 City Input
             TextField(
               controller: _cityController,
               decoration: const InputDecoration(
@@ -40,7 +40,6 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
 
             const SizedBox(height: 16),
 
-            // 🔹 Search Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -59,44 +58,161 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
 
             const SizedBox(height: 30),
 
-            // 🔹 State Handling
-            if (state.isLoading)
-              const CircularProgressIndicator(),
+            // ✅ Change: AsyncValue.when use kar rahe
+            Expanded(
+              child: weatherState.when(
 
-            if (!state.isLoading && state.error != null)
-              Text(
-                "Error: ${state.error}",
-                style: const TextStyle(color: Colors.red),
-              ),
+                loading: () =>
+                const Center(child: CircularProgressIndicator()),
 
-            if (!state.isLoading && state.weather != null)
-              Card(
-                elevation: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Text(
-                        state.weather!.cityName,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
+                error: (error, stackTrace) =>
+                    Center(
+                      child: Text(
+                        error.toString(),
+                        style: const TextStyle(color: Colors.red),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "${state.weather!.temperature} °C",
-                        style: const TextStyle(fontSize: 20),
+                    ),
+
+                data: (weather) {
+
+                  // Initial state
+                  if (weather == null) {
+                    return const Center(
+                      child: Text("Search a city"),
+                    );
+                  }
+
+                  return Card(
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            weather.cityName,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "${weather.temperature} °C",
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(weather.description),
+                        ],
                       ),
-                      const SizedBox(height: 8),
-                      Text(state.weather!.description),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+//-----------------------------using state using nework class ---------------------------->
+
+// class WeatherScreen extends ConsumerStatefulWidget {
+//   const WeatherScreen({super.key});
+//
+//   @override
+//   ConsumerState<WeatherScreen> createState() => _WeatherScreenState();
+// }
+//
+// class _WeatherScreenState extends ConsumerState<WeatherScreen> {
+//
+//   final TextEditingController _cityController = TextEditingController();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//     final state = ref.watch(weatherViewModelProvider);
+//
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text("Weather App"),
+//         centerTitle: true,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           children: [
+//
+//             // 🔹 City Input
+//             TextField(
+//               controller: _cityController,
+//               decoration: const InputDecoration(
+//                 labelText: "Enter City",
+//                 border: OutlineInputBorder(),
+//               ),
+//             ),
+//
+//             const SizedBox(height: 16),
+//
+//             // 🔹 Search Button
+//             SizedBox(
+//               width: double.infinity,
+//               child: ElevatedButton(
+//                 onPressed: () {
+//                   final city = _cityController.text.trim();
+//
+//                   if (city.isNotEmpty) {
+//                     ref
+//                         .read(weatherViewModelProvider.notifier)
+//                         .getWeather(city);
+//                   }
+//                 },
+//                 child: const Text("Get Weather"),
+//               ),
+//             ),
+//
+//             const SizedBox(height: 30),
+//
+//             // 🔹 State Handling
+//             if (state.isLoading)
+//               const CircularProgressIndicator(),
+//
+//             if (!state.isLoading && state.error != null)
+//               Text(
+//                 "Error: ${state.error}",
+//                 style: const TextStyle(color: Colors.red),
+//               ),
+//
+//             if (!state.isLoading && state.weather != null)
+//               Card(
+//                 elevation: 4,
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(16),
+//                   child: Column(
+//                     children: [
+//                       Text(
+//                         state.weather!.cityName,
+//                         style: const TextStyle(
+//                           fontSize: 22,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 8),
+//                       Text(
+//                         "${state.weather!.temperature} °C",
+//                         style: const TextStyle(fontSize: 20),
+//                       ),
+//                       const SizedBox(height: 8),
+//                       Text(state.weather!.description),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

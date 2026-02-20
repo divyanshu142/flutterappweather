@@ -1,10 +1,16 @@
 // lib/data/remote/dto/weather_response.dart
+
+// Ye file API se aane wale JSON response ko Dart objects me convert karne ke liye hai
+
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../domain/modal/Weather.dart';
 
+// Ye generated file hogi jo build_runner se generate hoti hai
+// Isme fromJson aur toJson ka actual implementation hota hai
 part 'weather_response.g.dart'; // ✅ Ye generate hogi
 
+// Is class ke liye JSON convert karne ka code automatically generate karo
 @JsonSerializable()
 class WeatherResponse {
   final CoordDto coord;
@@ -37,11 +43,18 @@ class WeatherResponse {
     required this.cod,
   });
 
+  // Factory constructor jo JSON ko Dart object me convert karega
+  // (cozz api se jo responce ata he vo json me ata he isliye)
   factory WeatherResponse.fromJson(Map<String, dynamic> json) =>
       _$WeatherResponseFromJson(json);
+  // Ye method generated file se call hota hai
 
+  // Dart object ko JSON me convert karega
+  // (cozz jab ham data server pe bhejte he to json me bhejte he) -->
   Map<String, dynamic> toJson() => _$WeatherResponseToJson(this);
 
+  // DTO → Domain model conversion (Clean Architecture)
+  // (hame jitne object chhiye utne hi add karenge ham idhar isse unnesesury object use nahi honge)
   Weather toDomain() {
     return Weather(
       cityName: name,
