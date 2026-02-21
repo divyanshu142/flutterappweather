@@ -1,32 +1,65 @@
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../domain/modal/Weather.dart';
 import '../../domain/repository/weather_repository.dart';
 import '../../utils/network_result.dart';
 import '../remort/weather_api.dart';
 
+// Ye class WeatherRepository interface ko implement kar rahi hai
+// Repository ka kaam hota hai data source (API, DB) aur ViewModel ke beech bridge ka kaam karna
+
 class WeatherRepositoryImpl implements WeatherRepository {
+
+  // Ye private variable hai (_ se start ho raha hai)
+  // Isme WeatherApiInterface ka object store hoga
+  // Iska use API call karne ke liye hoga
 
   final WeatherApiInterface _weatherApi;
 
+  // Constructor
+  // Yaha Dependency Injection use ho rahi hai
+  // Jab repository create hogi tab WeatherApi ka instance pass kiya jayega
+
   WeatherRepositoryImpl(this._weatherApi);
+
+  // Future<Weather> ka matlab:
+  // Ye function immediately Weather return nahi karega
+  // Ye ek Future return karega jo future me Weather object dega
+  // (kyunki API call time leti hai - async operation)
 
   @override
   Future<Weather> getWeather(String city) async {
+
     try {
+
+      // Yaha API call ho rahi hai
+      // city parameter pass kar rahe hain
+      // Ye async call hai isliye await use ho raha hai
+
       final response = await _weatherApi.getWeather(city);
 
-      // ✅ Change: NetworkResult return nahi kar rahe
-      // Repository sirf data return karega
+      // API se jo response mila hai wo Data Model me hoga
+      // toDomain() function usko Domain Model me convert karta hai
+      // Repository ka kaam sirf clean Weather object return karna hai
+
       return response.toDomain();
 
     } on DioException catch (e) {
 
-      // ✅ Change: Failure return karne ki jagah exception throw kar rahe
+      // Agar network error aata hai (jaise no internet, timeout, 404 etc)
+      // Pehle hum Failure object return karte the
+      // Ab hum direct exception throw kar rahe hain
+      // Ye exception upar ViewModel ya AsyncNotifier handle karega
+
       throw Exception(e.message ?? "Network error occurred");
 
     } catch (e) {
+
+      // Agar koi aur unexpected error aaye
+      // (jaise parsing error, null error etc)
+      // To generic exception throw kar rahe hain
 
       throw Exception("Unexpected error: ${e.toString()}");
     }

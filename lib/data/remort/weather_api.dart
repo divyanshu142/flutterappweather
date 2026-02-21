@@ -31,11 +31,13 @@ class WeatherApi implements WeatherApiInterface {
 
   // Ye override keyword batata hai ki
   // hum interface ka method implement kar rahe hain
+
   @override
   Future<WeatherResponse> getWeather(String city) async {
 
     // _dio.get() HTTP GET request bhejta hai
     // Ye async hai isliye await use kar rahe hain
+
     final response = await _dio.get(
       'data/2.5/weather',
       queryParameters: {
@@ -47,6 +49,7 @@ class WeatherApi implements WeatherApiInterface {
 
     // response.data me JSON data milta hai
     // Usko WeatherResponse DTO me convert kar rahe hain
+
     return WeatherResponse.fromJson(response.data);
   }
 }

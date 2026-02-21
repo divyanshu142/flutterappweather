@@ -69,7 +69,7 @@ Map<String, dynamic> _$WeatherDetailDtoToJson(WeatherDetailDto instance) =>
     };
 
 MainDto _$MainDtoFromJson(Map<String, dynamic> json) => MainDto(
-  temp: (json['temp'] as num).toDouble(),
+  temp: (json['temp'] as num?)?.toDouble(),
   feelsLike: (json['feels_like'] as num).toDouble(),
   tempMin: (json['temp_min'] as num).toDouble(),
   tempMax: (json['temp_max'] as num).toDouble(),
@@ -104,16 +104,12 @@ Map<String, dynamic> _$CloudsDtoToJson(CloudsDto instance) => <String, dynamic>{
 };
 
 SysDto _$SysDtoFromJson(Map<String, dynamic> json) => SysDto(
-  type: (json['type'] as num).toInt(),
-  id: (json['id'] as num).toInt(),
   country: json['country'] as String,
   sunrise: (json['sunrise'] as num).toInt(),
   sunset: (json['sunset'] as num).toInt(),
 );
 
 Map<String, dynamic> _$SysDtoToJson(SysDto instance) => <String, dynamic>{
-  'type': instance.type,
-  'id': instance.id,
   'country': instance.country,
   'sunrise': instance.sunrise,
   'sunset': instance.sunset,

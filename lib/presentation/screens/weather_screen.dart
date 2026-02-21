@@ -2,6 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewmodels/weather_viewmodel.dart';
+import '../widgets/WeatherCard.dart';
+
+// Ye screen ConsumerStatefulWidget hai
+// Iska matlab:
+// 1. Ye StatefulWidget hai (state maintain kar sakta hai)
+// 2. Riverpod ka ref use kar sakta hai (providers access karne ke liye)
 
 class WeatherScreen extends ConsumerStatefulWidget {
   const WeatherScreen({super.key});
@@ -10,12 +16,23 @@ class WeatherScreen extends ConsumerStatefulWidget {
   ConsumerState<WeatherScreen> createState() => _WeatherScreenState();
 }
 
+// Ye actual state class hai
+// ConsumerState ka matlab: yaha ref available hoga
+
 class _WeatherScreenState extends ConsumerState<WeatherScreen> {
+
+  // TextField ka controller
+  // Isse hum user ka input read kar sakte hain
 
   final TextEditingController _cityController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    // Yaha hum provider ko watch kar rahe hain
+    // watch() ka matlab:
+    // - Jab bhi state change hoga
+    // - Ye widget automatically rebuild hoga
 
     // ✅ Change: AsyncValue watch kar rahe
     final weatherState = ref.watch(weatherViewModelProvider);
@@ -47,6 +64,11 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
                   final city = _cityController.text.trim();
 
                   if (city.isNotEmpty) {
+
+                    // Yaha read() use kar rahe hain
+                    // Kyunki hume rebuild nahi chahiye
+                    // Hume sirf function call karna hai
+
                     ref
                         .read(weatherViewModelProvider.notifier)
                         .getWeather(city);
@@ -58,7 +80,9 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
 
             const SizedBox(height: 30),
 
-            // ✅ Change: AsyncValue.when use kar rahe
+            // 🔥 Yaha main magic ho raha hai
+            // weatherState ek AsyncValue<Weather?> hai
+
             Expanded(
               child: weatherState.when(
 
@@ -75,38 +99,19 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
 
                 data: (weather) {
 
-                  // Initial state
+                  // Initial state me build() null return karta hai
+                  // Isliye first time weather null hoga
+
                   if (weather == null) {
                     return const Center(
                       child: Text("Search a city"),
                     );
                   }
 
-                  return Card(
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            weather.cityName,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "${weather.temperature} °C",
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(weather.description),
-                        ],
-                      ),
-                    ),
-                  );
+                  // Agar weather available hai
+                  // To custom WeatherCard widget show karenge
+
+                  return WeatherCard(weather: weather);
                 },
               ),
             ),

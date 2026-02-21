@@ -49,7 +49,6 @@ final weatherApiProvider = Provider<WeatherApiInterface>((ref) {
 // Ab repository API ko call karega aur data process karega
 // UI directly API ko call nahi karegi (Clean Architecture follow ho raha hai)
 
-
 final weatherRepositoryProvider = Provider<WeatherRepository>((ref) {
   return WeatherRepositoryImpl(ref.read(weatherApiProvider));
 });

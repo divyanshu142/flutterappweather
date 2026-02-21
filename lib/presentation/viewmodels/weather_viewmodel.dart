@@ -5,34 +5,84 @@ import 'package:weatherapp/domain/modal/Weather.dart';
 import '../../domain/repository/weather_repository.dart';
 import '../../di/network_module.dart';
 import '../../utils/network_result.dart';
-//import 'weather_state.dart';
+
+// 🔹 WeatherViewModel ek AsyncNotifier hai
+// AsyncNotifier automatically loading, data aur error state handle karta hai
+// <Weather?> ka matlab state me Weather object ya null ho sakta hai
 
 class WeatherViewModel extends AsyncNotifier<Weather?> {
 
+  // 🔹 Repository ka reference
+  // late final ka matlab:
+  // - variable baad me initialize hoga
+  // - sirf ek baar assign hoga
+  // - null nahi hoga
+
   late final WeatherRepository _repository;
+
+  // 🔹 build() AsyncNotifier ka mandatory method hai
+  // Provider jab first time create hota hai
+  // tab ye method automatically call hota hai
 
   @override
   Future<Weather?> build() async {
-    // ✅ Change: Repository yaha initialize
+
+    // 🔹 ref Riverpod ka reference object hai
+    // Yaha hum repository provider se repository le rahe hain
+    // read() ka matlab:
+    // - ek baar value lo
+    // - reactive nahi (changes pe rebuild nahi hoga)
+
     _repository = ref.read(weatherRepositoryProvider);
 
-    // Initial state → no weather yet
+    // 🔹 Initial state set kar rahe hain
+    // Abhi koi weather data nahi hai
+    // Isliye null return kar rahe hain
+
+    // AsyncNotifier internally:
+    // 1️⃣ build start hote hi → state = AsyncLoading()
+    // 2️⃣ build complete hote hi → state = AsyncData(returnedValue)
+    // Yaha returnedValue = null
+    // To state banegi → AsyncData(null)
+
     return null;
   }
 
+  // 🔹 Ye method UI se call hoga
+  // Jab user city search karega
+
   Future<void> getWeather(String city) async {
 
-    // ✅ Change: Manual isLoading remove
-    // AsyncNotifier automatically handle karega
+    // 🔹 Loading state manually set kar rahe hain
+    // UI me CircularProgressIndicator show hoga
+
     state = const AsyncLoading();
+
+    // 🔹 AsyncValue.guard kya karta hai?
+    // - try-catch automatically handle karta hai
+    // - Success → AsyncData me convert karta hai
+    // - Error → AsyncError me convert karta hai
 
     state = await AsyncValue.guard(() async {
 
-      // ✅ Change: Direct Weather return ho raha
+      // 🔹 Repository se API call ho rahi hai
+      // Agar success → Weather object return hoga
+      // Agar error → exception throw hoga
+
       return await _repository.getWeather(city);
     });
   }
 }
+
+// 🔹 Ye Riverpod provider hai
+// AsyncNotifierProvider ka kaam:
+// - WeatherViewModel ko create karna
+// - uski state manage karna
+// - UI ko state provide karna
+
+// <WeatherViewModel, Weather?> ka matlab:
+// - WeatherViewModel = logic class
+// - Weather? = state ka type
 
 final weatherViewModelProvider =
 AsyncNotifierProvider<WeatherViewModel, Weather?>(

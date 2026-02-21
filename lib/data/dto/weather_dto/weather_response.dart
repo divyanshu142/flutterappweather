@@ -58,7 +58,7 @@ class WeatherResponse {
   Weather toDomain() {
     return Weather(
       cityName: name,
-      temperature: main.temp,
+      temperature: main.temp ?? 0.0,
       description: weather.isNotEmpty ? weather[0].description : "",
       icon: weather.isNotEmpty ? weather[0].icon : "",
     );
@@ -87,7 +87,7 @@ class WeatherDetailDto {
 
 @JsonSerializable()
 class MainDto {
-  final double temp;
+  final double? temp;
   @JsonKey(name: 'feels_like')
   final double feelsLike;
   @JsonKey(name: 'temp_min')   // ✅ Add this
@@ -129,21 +129,19 @@ class CloudsDto {
 
 @JsonSerializable()
 class SysDto {
-  final int type;
-  final int id;
   final String country;
   final int sunrise;
   final int sunset;
 
   SysDto({
-    required this.type,
-    required this.id,
     required this.country,
     required this.sunrise,
     required this.sunset,
   });
 
-  factory SysDto.fromJson(Map<String, dynamic> json) => _$SysDtoFromJson(json);
+  factory SysDto.fromJson(Map<String, dynamic> json) =>
+      _$SysDtoFromJson(json);
+
   Map<String, dynamic> toJson() => _$SysDtoToJson(this);
 }
 
