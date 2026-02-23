@@ -66,7 +66,6 @@ class WeatherRepositoryImpl implements WeatherRepository {
   }
 }
 
-
 //--------------------------------- using network class ------------------------->
 
 // WeatherRepositoryImpl class

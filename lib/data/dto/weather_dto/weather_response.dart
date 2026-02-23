@@ -10,7 +10,7 @@ import '../../../domain/modal/Weather.dart';
 // Isme fromJson aur toJson ka actual implementation hota hai
 part 'weather_response.g.dart'; // ✅ Ye generate hogi
 
-// Is class ke liye JSON convert karne ka code automatically generate karo
+// Is class ke liye JSON convert karne ka code automatically generate karo.
 @JsonSerializable()
 class WeatherResponse {
   final CoordDto coord;
@@ -53,7 +53,8 @@ class WeatherResponse {
   // (cozz jab ham data server pe bhejte he to json me bhejte he) -->
   Map<String, dynamic> toJson() => _$WeatherResponseToJson(this);
 
-  // DTO → Domain model conversion (Clean Architecture)
+  // DTO (Data Transfer Object) / json ko Domain Model me convert karna
+  // after that you can use this in your UI
   // (hame jitne object chhiye utne hi add karenge ham idhar isse unnesesury object use nahi honge)
   Weather toDomain() {
     return Weather(
