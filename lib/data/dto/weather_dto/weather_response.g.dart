@@ -6,6 +6,7 @@ part of 'weather_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+// Ye function JSON data ko WeatherResponse object me convert karta hai
 WeatherResponse _$WeatherResponseFromJson(Map<String, dynamic> json) =>
     WeatherResponse(
       coord: CoordDto.fromJson(json['coord'] as Map<String, dynamic>),

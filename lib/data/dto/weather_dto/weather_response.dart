@@ -146,8 +146,41 @@ class SysDto {
   Map<String, dynamic> toJson() => _$SysDtoToJson(this);
 }
 
+//----------------------------------- for direct use --------------------------------->
+
+// class WeatherModel {
+//   final String cityName;
+//   final double temperature;
+//   final String description;
+//   final String icon;
+//
+//   WeatherModel({
+//     required this.cityName,
+//     required this.temperature,
+//     required this.description,
+//     required this.icon,
+//   });
+//
+//   factory WeatherModel.fromJson(Map<String, dynamic> json) {
+//     return WeatherModel(
+//       cityName: json["name"],
+//       temperature: json["main"]["temp"].toDouble(),
+//       description: json["weather"][0]["description"],
+//       icon: json["weather"][0]["icon"],
+//     );
+//   }
+// }
+
 //------------------------------ Important Point ------------------------------->
 
 // run this command after every changes - flutter pub run build_runner build --delete-conflicting-outputs
 
 //------------------------------ Important Point ------------------------------->
+
+
+
+//------------------- Genrate JsonSerializable data class ------------------>
+
+// https://app.quicktype.io/
+
+//------------------- Genrate JsonSerializable data class ------------------>

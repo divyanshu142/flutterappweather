@@ -9,6 +9,8 @@ import '../widgets/WeatherCard.dart';
 // 1. Ye StatefulWidget hai (state maintain kar sakta hai)
 // 2. Riverpod ka ref use kar sakta hai (providers access karne ke liye)
 
+//-----------------------------using state by AsyncNotifier ---------------------------->
+
 class WeatherScreen extends ConsumerStatefulWidget {
   const WeatherScreen({super.key});
 
@@ -122,7 +124,8 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
   }
 }
 
-//-----------------------------using state using nework class ---------------------------->
+//-----------------------------using state by nework class ---------------------------->
+
 
 // class WeatherScreen extends ConsumerStatefulWidget {
 //   const WeatherScreen({super.key});
@@ -221,3 +224,124 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
 //     );
 //   }
 // }
+
+
+//------------------------------------- for direct use --------------------------->
+
+
+// class WeatherScreen extends StatefulWidget {
+//   const WeatherScreen({super.key});
+//
+//   @override
+//   State<WeatherScreen> createState() => _WeatherScreenState();
+// }
+//
+// class _WeatherScreenState extends State<WeatherScreen> {
+//
+//   final WeatherService weatherService = WeatherService();
+//   final TextEditingController cityController = TextEditingController();
+//
+//   WeatherModel? weather;
+//   bool isLoading = false;
+//
+//   void getWeather(String city) async {
+//
+//     setState(() {
+//       isLoading = true;
+//     });
+//
+//     final data = await weatherService.fetchWeather(city);
+//
+//     setState(() {
+//       weather = data;
+//       isLoading = false;
+//     });
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text("Weather App"),
+//       ),
+//
+//       body: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//
+//           children: [
+//
+//             /// City Input
+//             TextField(
+//               controller: cityController,
+//               decoration: const InputDecoration(
+//                 labelText: "Enter City",
+//                 border: OutlineInputBorder(),
+//               ),
+//             ),
+//
+//             const SizedBox(height: 10),
+//
+//             /// Search Button
+//             ElevatedButton(
+//               onPressed: () {
+//
+//                 String city = cityController.text.trim();
+//
+//                 if (city.isNotEmpty) {
+//                   getWeather(city);
+//                 }
+//
+//               },
+//               child: const Text("Get Weather"),
+//             ),
+//
+//             const SizedBox(height: 30),
+//
+//             /// Loader
+//             if (isLoading)
+//               const CircularProgressIndicator(),
+//
+//             /// Weather Data
+//             if (weather != null && !isLoading)
+//               Column(
+//                 children: [
+//
+//                   Text(
+//                     weather!.cityName,
+//                     style: const TextStyle(fontSize: 30),
+//                   ),
+//
+//                   const SizedBox(height: 10),
+//
+//                   Image.network(
+//                     "https://openweathermap.org/img/wn/${weather!.icon}@2x.png",
+//                   ),
+//
+//                   const SizedBox(height: 10),
+//
+//                   Text(
+//                     "${weather!.temperature} °C",
+//                     style: const TextStyle(fontSize: 40),
+//                   ),
+//
+//                   const SizedBox(height: 10),
+//
+//                   Text(
+//                     weather!.description,
+//                     style: const TextStyle(fontSize: 20),
+//                   ),
+//
+//                 ],
+//               )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+

@@ -74,3 +74,58 @@ class WeatherApi implements WeatherApiInterface {
 //     return WeatherResponse.fromJson(response.data);
 //   }
 // }
+
+// abstract class weatherAPIt {
+//   Future<WeatherResponse> getweather(String city);
+// }
+//
+// class weatherapiimpliment implements weatherAPIt {
+//
+//   final Dio _dioa;
+//
+//   weatherapiimpliment(this._dioa)
+//
+//
+//   @override
+//   Future<WeatherResponse> getweather(String city) async{
+//
+//     final responcet = await _dioa.get(
+//         'data/2.5/weather',
+//       queryParameters: {
+//           'q' : city,
+//         'appid' : Constants.apiKey,
+//         'unite' : 'metrix',
+//       },
+//     );
+//     return WeatherResponse.fromJson(responcet.data);
+//   }
+// }
+
+//----------------------------------------- for direct use ----------------------------------------->
+
+// class WeatherService {
+//
+//   final Dio dio = Dio();
+//
+//   Future<WeatherModel> fetchWeather(String city) async {
+//
+//     final url =
+//         "https://api.openweathermap.org/data/2.5/weather?q=$city&appid=60b297f87f660490905b175a249a4c5e&units=metric";
+//
+//     try {
+//
+//       final response = await dio.get(url);
+//
+//       if (response.statusCode == 200) {
+//
+//         return WeatherModel.fromJson(response.data);
+//
+//       } else {
+//         throw Exception("Failed to load weather");
+//       }
+//
+//     } catch (e) {
+//       throw Exception(e.toString());
+//     }
+//   }
+// }
